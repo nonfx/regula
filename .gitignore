@@ -9,3 +9,4 @@ dist/
 .scratch/
 .regula-history
 main.wasi
+main.wasm

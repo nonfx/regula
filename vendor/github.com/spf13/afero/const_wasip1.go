@@ -10,13 +10,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build !darwin && !openbsd && !freebsd && !dragonfly && !netbsd && !aix && !wasip1
-// +build !darwin,!openbsd,!freebsd,!dragonfly,!netbsd,!aix,!wasip1
+//go:build wasip1
+// +build wasip1
 
 package afero
 
-import (
-	"syscall"
-)
+type Errno uintptr
 
-const BADFD = syscall.EBADFD
+const BADFD = Errno(0x9)
+
+// Dummy implementation to compile it to WASI
+func (e Errno) Error() string {
+	return "dummy"
+}

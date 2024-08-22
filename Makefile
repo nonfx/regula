@@ -156,9 +156,9 @@ bump_$(1)_version: $$(CHANGIE) remediation
 	@echo "    git push origin master $(2)"
 endef
 
-$(eval $(call bump_rule,major,$(NEXT_MAJOR)))
-$(eval $(call bump_rule,minor,$(NEXT_MINOR)))
-$(eval $(call bump_rule,patch,$(NEXT_PATCH)))
+# $(eval $(call bump_rule,major,$(NEXT_MAJOR)))
+# $(eval $(call bump_rule,minor,$(NEXT_MINOR)))
+# $(eval $(call bump_rule,patch,$(NEXT_PATCH)))
 
 .PHONY: list_next_versions
 list_next_versions:

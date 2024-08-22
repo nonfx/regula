@@ -127,11 +127,12 @@ func Send(message string, priority Priority, vars map[string]string) error {
 	if err != nil {
 		return err
 	}
-	rights := syscall.UnixRights(int(file.Fd()))
-	_, _, err = conn.WriteMsgUnix([]byte{}, rights, socketAddr)
-	if err != nil {
-		return err
-	}
+	// @nonfx - Disabled for wasip1 compilation
+	// rights := syscall.UnixRights(int(file.Fd()))
+	// _, _, err = conn.WriteMsgUnix([]byte{}, rights, socketAddr)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }

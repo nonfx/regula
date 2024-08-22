@@ -1,5 +1,5 @@
-//go:build !darwin && !dragonfly && !freebsd && !openbsd && !linux && !netbsd && !solaris && !windows
-// +build !darwin,!dragonfly,!freebsd,!openbsd,!linux,!netbsd,!solaris,!windows
+//go:build (!darwin && !dragonfly && !freebsd && !openbsd && !linux && !netbsd && !solaris && !windows) || wasip1
+// +build !darwin,!dragonfly,!freebsd,!openbsd,!linux,!netbsd,!solaris,!windows wasip1
 
 package fsnotify
 
@@ -9,7 +9,10 @@ import (
 )
 
 // Watcher watches a set of files, delivering events to a channel.
-type Watcher struct{}
+type Watcher struct {
+	Events chan Event
+	Errors chan error
+}
 
 // NewWatcher creates a new Watcher.
 func NewWatcher() (*Watcher, error) {
