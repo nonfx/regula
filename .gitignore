@@ -8,3 +8,4 @@ dist/
 .vscode/
 .scratch/
 .regula-history
+main.wasi

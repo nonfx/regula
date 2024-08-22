@@ -38,6 +38,10 @@ YQ = $(DOCKER) run --rm -v $(shell pwd):/workdir mikefarah/yq:4
 binary: ## Build regula binary
 binary: $(BINARY)
 
+.PHONY: wasi
+wasi: ## Build regula binary
+	GOOS=wasip1 GOARCH=wasm go build -mod=vendor -o main.wasm main.go
+
 # https://gist.github.com/prwhite/8168133#gistcomment-3456785
 help: ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
