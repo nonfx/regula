@@ -45,6 +45,10 @@ allow_resource(resource) = ret {
   ret := allow({"resource": resource})
 }
 
+allow_resource_with_message(resource, message) = ret {
+  ret := allow({"resource": resource, "message": message})
+}
+
 allow(params) = ret {
   ret := {
     "valid": true,

@@ -46,7 +46,7 @@ func (t *TfDetector) DetectFile(i InputFile, opts DetectOptions) (IACConfigurati
 		}
 	}
 
-	moduleTree, err := hcl_interpreter.ParseFiles(nil, inputFs, false, dir, []string{i.Path()}, []string{}, opts.VarFiles)
+	moduleTree, err := hcl_interpreter.ParseFiles(nil, inputFs, false, dir, []string{}, []string{i.Path()}, opts.VarFiles)
 	if err != nil {
 		return nil, err
 	}
