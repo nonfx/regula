@@ -18,9 +18,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	inputs "github.com/fugue/regula/v3/pkg/loader/test_inputs"
-	"github.com/fugue/regula/v3/pkg/mocks"
+	"github.com/nonfx/regula/pkg/loader"
+	inputs "github.com/nonfx/regula/pkg/loader/test_inputs"
+	"github.com/nonfx/regula/pkg/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

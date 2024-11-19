@@ -22,8 +22,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	"github.com/fugue/regula/v3/pkg/rego"
+	"github.com/nonfx/regula/pkg/loader"
+	"github.com/nonfx/regula/pkg/rego"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/storage/inmem"
 	"github.com/open-policy-agent/opa/tester"

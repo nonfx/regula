@@ -17,8 +17,8 @@ package reporter
 import (
 	"bytes"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	"github.com/fugue/regula/v3/pkg/version"
+	"github.com/nonfx/regula/pkg/loader"
+	"github.com/nonfx/regula/pkg/version"
 	"github.com/owenrumney/go-sarif/v2/sarif"
 )
 

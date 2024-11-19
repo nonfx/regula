@@ -24,7 +24,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/fugue/regula/v3/pkg/loader"
+	"github.com/nonfx/regula/pkg/loader"
 )
 
 //go:embed testinput.tmpl

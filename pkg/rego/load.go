@@ -25,8 +25,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	embedded "github.com/fugue/regula/v3/rego"
+	"github.com/nonfx/regula/pkg/loader"
+	embedded "github.com/nonfx/regula/rego"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/sirupsen/logrus"

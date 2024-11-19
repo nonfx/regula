@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/fugue/regula/v3/pkg/loader"
+	"github.com/nonfx/regula/pkg/loader"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

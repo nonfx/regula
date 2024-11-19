@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fugue/regula/v3/pkg/rego"
-	"github.com/fugue/regula/v3/pkg/regotools/doublequote"
-	"github.com/fugue/regula/v3/pkg/regotools/metadoc"
-	"github.com/fugue/regula/v3/pkg/swagger/client/custom_rules"
-	"github.com/fugue/regula/v3/pkg/swagger/models"
+	"github.com/nonfx/regula/pkg/rego"
+	"github.com/nonfx/regula/pkg/regotools/doublequote"
+	"github.com/nonfx/regula/pkg/regotools/metadoc"
+	"github.com/nonfx/regula/pkg/swagger/client/custom_rules"
+	"github.com/nonfx/regula/pkg/swagger/models"
 	"github.com/sirupsen/logrus"
 )
 

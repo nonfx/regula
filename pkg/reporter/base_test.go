@@ -21,8 +21,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	"github.com/fugue/regula/v3/pkg/mocks"
+	"github.com/nonfx/regula/pkg/loader"
+	"github.com/nonfx/regula/pkg/mocks"
 )
 
 func testOutput() RegulaReport {

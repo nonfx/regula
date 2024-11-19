@@ -21,10 +21,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	"github.com/fugue/regula/v3/pkg/rego"
-	"github.com/fugue/regula/v3/pkg/version"
-	embedded "github.com/fugue/regula/v3/rego"
+	"github.com/nonfx/regula/pkg/loader"
+	"github.com/nonfx/regula/pkg/rego"
+	"github.com/nonfx/regula/pkg/version"
+	embedded "github.com/nonfx/regula/rego"
 )
 
 type Severity int

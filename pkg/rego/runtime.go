@@ -18,7 +18,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fugue/regula/v3/pkg/version"
+	"github.com/nonfx/regula/pkg/version"
 	"github.com/open-policy-agent/opa/ast"
 )
 

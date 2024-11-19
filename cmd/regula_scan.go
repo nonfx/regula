@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 
-	"github.com/fugue/regula/v3/pkg/loader"
-	"github.com/fugue/regula/v3/pkg/rego"
-	"github.com/fugue/regula/v3/pkg/reporter"
+	"github.com/nonfx/regula/pkg/loader"
+	"github.com/nonfx/regula/pkg/rego"
+	"github.com/nonfx/regula/pkg/reporter"
 )
 
 var iacPath = []string{"/Users/chandrashekhar/source-code/src/github.com/nonfx/tf-regula-test/module-test/iac"}

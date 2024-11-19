@@ -17,7 +17,7 @@ package loader_test
 import (
 	"testing"
 
-	"github.com/fugue/regula/v3/pkg/loader"
+	"github.com/nonfx/regula/pkg/loader"
 	"github.com/stretchr/testify/assert"
 )
 
