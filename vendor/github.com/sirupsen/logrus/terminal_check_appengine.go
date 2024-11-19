@@ -1,5 +1,4 @@
-//go:build appengine || wasip1
-// +build appengine wasip1
+// +build appengine
 
 package logrus
 
