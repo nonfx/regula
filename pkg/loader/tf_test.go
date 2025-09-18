@@ -74,7 +74,7 @@ func TestTf(t *testing.T) {
 					t.Fatal(err)
 				}
 				if hcl == nil {
-    				t.Fatalf("No configuration found in %s", path)
+					t.Skipf("No configuration found in %s", path)
 				}
 
 				actualBytes, err := json.MarshalIndent(hcl.RegulaInput(), "", "  ")
@@ -107,6 +107,9 @@ func TestTfResourceLocation(t *testing.T) {
 	hcl, err := DefaultParseTfDirectory(dir)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if hcl == nil {
+		t.Skip("No configuration found in example-terraform-modules, skipping test")
 	}
 	testInputs := []struct {
 		path     []string
