@@ -14,8 +14,8 @@ builds:
       binary: regula
       ldflags:
         - -s -w
-        - -X github.com/fugue/regula/v3/pkg/version.Version={{.Tag}}
-        - -X github.com/fugue/regula/v3/pkg/version.GitCommit={{.ShortCommit}}
+        - -X github.com/nonfx/regula/v3/pkg/version.Version={{.Tag}}
+        - -X github.com/nonfx/regula/v3/pkg/version.GitCommit={{.ShortCommit}}
     id: macos
     goos: [darwin]
     goarch: [amd64, arm64]
@@ -51,25 +51,15 @@ archives:
     <<: *archive_defaults
     format: zip
 
-dockers:
-  - image_templates:
-    - "fugue/regula:{{ if .Prerelease }}preview{{ else }}latest{{ end }}"
-    - "fugue/regula:{{ .Tag }}"
-    - "fugue/regula:v{{ .Major }}{{ if .Prerelease }}-pre{{ end }}"
-    - "fugue/regula:v{{ .Major }}.{{ .Minor }}{{ if .Prerelease }}-pre{{ end }}"
+# Docker builds disabled - only need binary releases
+# dockers:
+#   - image_templates:
+#     - "nonfx/regula:{{ if .Prerelease }}preview{{ else }}latest{{ end }}"
+#     - "nonfx/regula:{{ .Tag }}"
 
-brews:
-  - skip_upload: auto
-    tap:
-      owner: fugue
-      name: homebrew-regula
-      token: "{{ .Env.BREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: Fugue
-      email: regula@fugue.co
-    folder: Formula
-    homepage: "https://regula.dev"
-    description: "Evaluate infrastructure as code for security and compliance"
+# Homebrew tap disabled - only need binary releases
+# brews:
+#   - skip_upload: true
 
 checksum:
   name_template: "checksums.txt"
