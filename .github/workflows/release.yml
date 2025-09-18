@@ -7,7 +7,6 @@ on:
 
 jobs:
   release:
-    environment: release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,19 +26,10 @@ jobs:
         env:
           TAG_NAME: ${{ steps.tag_name.outputs.TAG_NAME }}
         run: make changes/${TAG_NAME}.md
-      - name: Docker login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-        run: |
-          echo "${DOCKER_TOKEN}" | docker login \
-            --username "${DOCKER_USERNAME}" \
-            --password-stdin
       - name: Run GoReleaser
         env:
           TAG_NAME: ${{ steps.tag_name.outputs.TAG_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BREW_TAP_GITHUB_TOKEN: ${{ secrets.BREW_TAP_GITHUB_TOKEN }}
         run: |
           goreleaser release \
             --release-notes=changes/${TAG_NAME}.md \
