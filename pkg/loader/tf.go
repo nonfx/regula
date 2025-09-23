@@ -46,7 +46,8 @@ func (t *TfDetector) DetectFile(i InputFile, opts DetectOptions) (IACConfigurati
 		}
 	}
 
-	moduleTree, err := hcl_interpreter.ParseFiles(nil, inputFs, false, dir, []string{i.Path()}, opts.VarFiles)
+	var moduleName hcl_interpreter.ModuleName
+	moduleTree, err := hcl_interpreter.ParseFiles(nil, inputFs, false, dir, moduleName, []string{i.Path()}, opts.VarFiles)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +82,8 @@ func (t *TfDetector) DetectDirectory(i InputDirectory, opts DetectOptions) (IACC
 
 	fs := &afero.OsFs{}
 	moduleRegister := hcl_interpreter.NewTerraformRegister(fs, i.Path())
-	moduleTree, err := hcl_interpreter.ParseDirectory(moduleRegister, fs, i.Path(), opts.VarFiles)
+	var moduleName hcl_interpreter.ModuleName
+	moduleTree, err := hcl_interpreter.ParseDirectory(moduleRegister, fs, i.Path(), moduleName, opts.VarFiles)
 	if err != nil {
 		return nil, err
 	}
