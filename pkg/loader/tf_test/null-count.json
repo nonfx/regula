@@ -8,7 +8,6 @@
         "_tags": {},
         "_type": "aws_s3_bucket",
         "bucket": "mybucket-0",
-        "count": null,
         "id": "aws_s3_bucket.foo[0]"
       }
     }

@@ -9,7 +9,6 @@
         "_type": "aws_s3_bucket",
         "acl": "private",
         "bucket": "not-working-1-random-string",
-        "count": 1,
         "id": "aws_s3_bucket.not_working_1[0]"
       },
       "aws_s3_bucket_public_access_block.not_working_1_block[0]": {
@@ -20,7 +19,6 @@
         "block_public_acls": true,
         "block_public_policy": true,
         "bucket": "aws_s3_bucket.not_working_1[0]",
-        "count": 1,
         "id": "aws_s3_bucket_public_access_block.not_working_1_block[0]",
         "ignore_public_acls": true,
         "restrict_public_buckets": true
