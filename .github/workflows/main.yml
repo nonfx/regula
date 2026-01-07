@@ -8,7 +8,7 @@ jobs:
     name: Test with Go ${{ matrix.go }}
     strategy:
       matrix:
-        go: ["1.24"]
+        go: ["1.24.11"]
     steps:
     - uses: actions/checkout@v3
       with:
