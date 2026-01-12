@@ -13,7 +13,7 @@ require (
 	github.com/go-openapi/validate v0.21.0
 	github.com/golang/mock v1.6.0
 	github.com/manifoldco/promptui v0.9.0
-	github.com/open-policy-agent/opa v1.8.0
+	github.com/open-policy-agent/opa v1.12.2
 	github.com/owenrumney/go-sarif/v2 v2.1.1
 	github.com/sirupsen/logrus v1.9.4-0.20230606125235-dd1b4c2e81af
 	github.com/snyk/policy-engine v0.18.1
@@ -131,7 +131,9 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
+	github.com/olekukonko/errors v1.1.0 // indirect
+	github.com/olekukonko/ll v0.0.9 // indirect
+	github.com/olekukonko/tablewriter v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/peterh/liner v1.2.2 // indirect
