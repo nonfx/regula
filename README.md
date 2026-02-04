@@ -1,16 +1,31 @@
-# Regula
+# Regula (nonfx fork)
 
-**Tip: See all of our documentation at [regula.dev](https://regula.dev)!**
+> **Note:** This is a maintained fork of [fugue/regula](https://github.com/fugue/regula), which is now archived. This fork includes security patches, dependency upgrades, and WASI/npm support.
 
-- [Regula](#regula)
-  - [Introduction](#introduction)
-  - [Installation](#installation)
-    - [Homebrew (macOS & Linux)](#homebrew-macos--linux)
-    - [Prebuilt binary (all platforms)](#prebuilt-binary-all-platforms)
-    - [Docker (all platforms)](#docker-all-platforms)
-    - [From source](#from-source)
-  - [Usage](#usage)
-  - [For more information](#for-more-information)
+## What's Different in This Fork
+
+### Security Patches & Upgrades
+- **OPA upgraded** from v0.45.1 to v1.12.2 (latest)
+- **Go upgraded** to 1.24.11 with stdlib CVE fixes
+- **AWS SDK** migrated to maintained fork
+- **go-getter** upgraded from 1.6.2 to 1.7.0
+- **golang.org/x/net** upgraded to fix vulnerabilities
+- **google.golang.org/grpc** upgraded to 1.56.3
+
+### WASI/WebAssembly Support
+This fork can be compiled to WASI (WebAssembly System Interface), allowing it to run in Node.js 18+ without native dependencies. This is useful for:
+- Serverless environments
+- Browser-based tools
+- Cross-platform distribution via npm
+
+### Vendor Patches for WASI
+The following vendor patches are applied during WASI builds:
+- `spf13/afero` - WASI-compatible errno handling
+- `sirupsen/logrus` - Terminal detection bypass for WASI
+- `fsnotify/fsnotify` - No-op file watcher for WASI
+- `chzyer/readline` - Terminal stubs for WASI
+
+---
 
 ## Introduction
 
@@ -22,141 +37,204 @@ Regula supports the following file types:
 - Terraform source code
 - Terraform JSON plans
 - Kubernetes YAML manifests
-- Azure Resource Manager (ARM) JSON templates _(in preview)_
+- Azure Resource Manager (ARM) JSON templates
 
-Regula includes a library of rules written in Rego, the policy language used by the [Open Policy Agent](https://www.openpolicyagent.org/) (OPA) project. Regula works with your favorite CI/CD tools such as Jenkins, Circle CI, and AWS CodePipeline; we’ve included a [GitHub Actions example](https://github.com/fugue/regula-action) so you can get started quickly. Where relevant, we’ve mapped Regula policies to the CIS AWS, Azure, Google Cloud, and Kubernetes Foundations Benchmarks so you can assess compliance posture. Regula is maintained by engineers at [Fugue](https://fugue.co).
+Regula includes a library of rules written in Rego, the policy language used by the [Open Policy Agent](https://www.openpolicyagent.org/) (OPA) project.
 
-Regula is also available as a Docker image on DockerHub [here](https://hub.docker.com/r/fugue/regula).
-
-More information is available at [regula.dev](https://regula.dev).
+---
 
 ## Installation
 
-### Homebrew (macOS & Linux)
+### npm (Node.js 18+)
 
-To install Regula via [Homebrew](https://brew.sh/):
+The easiest way to use Regula in JavaScript/TypeScript projects:
 
-```
-brew tap fugue/regula
-brew install regula
-```
-
-To upgrade Regula:
-
-```
-brew upgrade regula
+```bash
+npm install regula-wasi
 ```
 
-### Prebuilt binary (all platforms)
+#### CLI Usage
 
-1. Download the Regula archive for your platform from the [Releases](https://github.com/fugue/regula/releases) page.
-2. Extract the downloaded archive.
-3. Move the extracted `regula` binary to somewhere in your PATH:
+```bash
+# Run directly with npx
+npx regula-wasi run ./terraform/
 
-    macOS:
-
-    ```
-    mv regula /usr/local/bin
-    ```
-
-    Linux:
-
-    ```
-    sudo mv regula /usr/local/bin
-    ```
-
-    Windows (cmd):
-
-    ```
-    md C:\regula\bin
-    move regula.exe C:\regula\bin
-    setx PATH "%PATH%;C:\regula\bin"
-    ```
-
-    Windows (PowerShell):
-
-    ```
-    md C:\regula\bin
-    move regula.exe C:\regula\bin
-    $env:Path += ";C:\regula\bin"
-    # You can add '$env:Path += ";C:\regula\bin"' to your profile.ps1 file to
-    # persist that change across shell sessions.
-    ```
-
-4. _Windows users only:_ Close cmd and re-open it so the changes take effect.
-5. You can now run `regula`.
-
-### Docker (all platforms)
-
-Regula is available as a Docker image on DockerHub [here](https://hub.docker.com/r/fugue/regula).
-
-For usage, see [Running Regula with Docker](https://regula.dev/usage.html#running-regula-with-docker).
-
-### From source
-
-_macOS, Linux, and [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) only_
-
-1. [Install Go (v1.18+)](https://go.dev/doc/install)
-
-2. Build binary and move to `/usr/local/bin/regula`:
-
-    ```bash
-    make # this builds ./bin/regula
-    make install # this builds ./bin/regula and installs it to /usr/local/bin/regula
-    ```
-
-Once you've built the binary, execute the following to run tests:
-
+# Or install globally
+npm install -g regula-wasi
+regula run ./terraform/
 ```
-git submodule update --init --recursive
-make test
+
+#### Programmatic Usage
+
+```javascript
+import { runRegula, validate } from 'regula-wasi';
+
+// Basic usage
+const result = await runRegula('./terraform/');
+console.log(result.summary);
+
+// With options
+const result = await runRegula('./main.tf', {
+  inputType: 'tf',           // auto, tf, tf-plan, cfn, k8s, arm
+  include: ['./custom-rules/'],
+  only: ['FG_R00229'],       // Only run specific rules
+  exclude: ['FG_R00100'],    // Exclude specific rules
+  noBuiltIns: false,         // Disable built-in rules (use only custom rules)
+  noIgnore: false,           // Disable .gitignore filtering
+  varFiles: ['./prod.tfvars'], // Terraform variable files
+});
+
+// Check for failures
+if (result.summary.rule_results.FAIL > 0) {
+  console.error('Security violations found!');
+  process.exit(1);
+}
 ```
+
+#### API Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `inputType` | string | Input type: `auto`, `tf`, `tf-plan`, `cfn`, `k8s`, `arm` |
+| `include` | string[] | Additional rego rule files/directories to include |
+| `only` | string[] | Only run these specific rule IDs |
+| `exclude` | string[] | Exclude these specific rule IDs |
+| `noBuiltIns` | boolean | Disable built-in rules (use only custom rules from `include`) |
+| `noIgnore` | boolean | Disable .gitignore filtering |
+| `varFiles` | string[] | Terraform variable files (.tfvars) to use |
+
+### Prebuilt Binary
+
+Download from [Releases](https://github.com/nonfx/regula/releases) for your platform.
+
+### From Source
+
+Requires Go 1.21+
+
+```bash
+# Build native binary
+make binary          # outputs to ./bin/regula
+make install         # installs to /usr/local/bin/regula
+
+# Build WASI binary (requires Go 1.25+)
+./build-wasi.sh      # outputs regula.wasm
+```
+
+### Docker
+
+```bash
+docker run --rm -v $(pwd):/workspace ghcr.io/nonfx/regula run /workspace
+```
+
+---
 
 ## Usage
 
-**For a tutorial on using Regula with example IaC, see [Getting Started](https://regula.dev/getting-started.html#tutorial-run-regula-locally-on-terraform-iac).**
+### Basic Commands
+
+```bash
+# Scan Terraform directory
+regula run ./terraform/
+
+# Scan with specific input type
+regula run --input-type tf ./main.tf
+
+# Output as JSON
+regula run --format json ./terraform/
+
+# Include custom rules
+regula run --include ./custom-rules/ ./terraform/
+
+# Run only specific rules
+regula run --only FG_R00229 ./terraform/
+```
+
+### Output Formats
+
+- `text` (default) - Human-readable output
+- `json` - JSON output for programmatic use
+- `table` - Tabular output
+- `sarif` - SARIF format for GitHub Code Scanning
+- `junit` - JUnit XML for CI/CD integration
+- `tap` - Test Anything Protocol
+
+### Exit Codes
+
+- `0` - No violations found
+- `1` - Violations found or error occurred
+
+---
+
+## Available Commands
 
 ```
-Regula
+regula [command]
 
-Usage:
-  regula [command]
-
-Available Commands:
-  completion        generate the autocompletion script for the specified shell
-  help              Help about any command
-  init              Create a new Regula configuration file in the current working directory.
-  repl              Start an interactive session for testing rules with Regula
-  run               Evaluate rules against infrastructure as code with Regula.
-  show              Show debug information.
-  test              Run OPA test with Regula.
-  version           Print version information.
-  write-test-inputs Persist dynamically-generated test inputs for use with other Rego interpreters
+Commands:
+  run               Evaluate rules against infrastructure as code
+  test              Run OPA test with Regula
+  repl              Start an interactive session for testing rules
+  init              Create a new Regula configuration file
+  show              Show debug information
+  version           Print version information
+  completion        Generate shell autocompletion script
 
 Flags:
-  -h, --help      help for regula
-  -v, --verbose   verbose output
-
-Use "regula [command] --help" for more information about a command.
+  -h, --help        Help for regula
+  -v, --verbose     Verbose output
 ```
 
-For details about each command, including examples, see [Usage](https://regula.dev/usage.html).
+---
 
-## For more information
+## Building
 
-Visit [regula.dev](https://regula.dev) for more information about Regula, including:
+### Native Binary
 
-- [Regula's report output](https://regula.dev/report.html)
-- [Integrations](https://regula.dev/integrations/conftest.html)
-- [Writing](https://regula.dev/development/writing-rules.html) and [testing](https://regula.dev/development/testing-rules.html) custom rules
-- [Configuring waivers and disabling rules](https://regula.dev/configuration.html)
-- and more!
+```bash
+# Standard build
+go build -mod vendor -o bin/regula .
 
+# Or use make
+make binary
+```
 
-[opa]: https://www.openpolicyagent.org/
-[fregot]: https://github.com/fugue/fregot
-[CloudFormation]: https://docs.aws.amazon.com/cloudformation/
-[Terraform]: https://www.terraform.io/
-[Rego]: https://www.openpolicyagent.org/docs/latest/policy-language/
-[Fugue Custom Rules]: https://docs.fugue.co/rules.html
-[Conftest]: https://github.com/open-policy-agent/conftest
+### WASI Binary
+
+Requires Go 1.25+ for large binary WASM linking.
+
+```bash
+./build-wasi.sh
+```
+
+This will:
+1. Vendor dependencies (`go mod vendor`)
+2. Apply WASI patches from `patches/` directory
+3. Build `regula.wasm` (121MB)
+
+### Running Tests
+
+```bash
+# Go tests
+make test
+
+# npm tests (requires WASI build)
+npm test              # Basic API tests
+npm run test:wasi     # Parity tests vs native binary
+```
+
+---
+
+## License
+
+Apache 2.0 - See [LICENSE](LICENSE)
+
+Originally created by [Fugue, Inc.](https://fugue.co)
+
+---
+
+## Links
+
+- [Original Documentation](https://regula.dev) (may be outdated)
+- [Original Repository](https://github.com/fugue/regula) (archived)
+- [This Fork](https://github.com/nonfx/regula)
+- [npm Package](https://www.npmjs.com/package/regula-wasi)

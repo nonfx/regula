@@ -1,0 +1,36 @@
+# Source code
+*.go
+go.mod
+go.sum
+vendor/
+patches/
+
+# Build files
+Makefile
+.goreleaser.yml
+Dockerfile
+build-wasi.sh
+
+# Development
+.github/
+.git/
+.gitignore
+.gitmodules
+test/
+bin/
+dist/
+docs/
+changes/
+
+# Rego source (embedded in binary)
+rego/
+
+# Other
+*.md
+!README.md
+pkg/
+cmd/
+swagger.yaml
+.regula.yaml
+.regula-history
+.scratch/
