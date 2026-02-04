@@ -79,6 +79,9 @@ const result = await runRegula('./main.tf', {
   include: ['./custom-rules/'],
   only: ['FG_R00229'],       // Only run specific rules
   exclude: ['FG_R00100'],    // Exclude specific rules
+  noBuiltIns: false,         // Disable built-in rules (use only custom rules)
+  noIgnore: false,           // Disable .gitignore filtering
+  varFiles: ['./prod.tfvars'], // Terraform variable files
 });
 
 // Check for failures
@@ -87,6 +90,18 @@ if (result.summary.rule_results.FAIL > 0) {
   process.exit(1);
 }
 ```
+
+#### API Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `inputType` | string | Input type: `auto`, `tf`, `tf-plan`, `cfn`, `k8s`, `arm` |
+| `include` | string[] | Additional rego rule files/directories to include |
+| `only` | string[] | Only run these specific rule IDs |
+| `exclude` | string[] | Exclude these specific rule IDs |
+| `noBuiltIns` | boolean | Disable built-in rules (use only custom rules from `include`) |
+| `noIgnore` | boolean | Disable .gitignore filtering |
+| `varFiles` | string[] | Terraform variable files (.tfvars) to use |
 
 ### Prebuilt Binary
 
