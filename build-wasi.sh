@@ -28,8 +28,6 @@ apply_patch patches/spf13/afero/const_win_unix.go vendor/github.com/spf13/afero/
 apply_patch patches/sirupsen/logrus/terminal_check_appengine.go vendor/github.com/sirupsen/logrus/terminal_check_appengine.go
 apply_patch patches/sirupsen/logrus/terminal_check_notappengine.go vendor/github.com/sirupsen/logrus/terminal_check_notappengine.go
 
-apply_patch patches/coreos/go-systemd/journal/journal.go vendor/github.com/coreos/go-systemd/journal/journal.go
-
 apply_patch patches/fsnotify/fsnotify/backend_other.go vendor/github.com/fsnotify/fsnotify/backend_other.go
 
 apply_patch patches/chzyer/readline/term.go vendor/github.com/chzyer/readline/term.go

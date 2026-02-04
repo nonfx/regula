@@ -10,6 +10,9 @@ const __dirname = dirname(__filename);
 
 const args = process.argv.slice(2);
 
+// Note: preopens "/" is required because regula needs to read IaC files from
+// any path the user specifies (including absolute paths like /home/user/terraform/).
+// This is expected behavior for a CLI tool that processes user-specified file paths.
 const wasi = new WASI({
   version: "preview1",
   args: ["regula", ...args],
