@@ -1,7 +1,7 @@
 {
   "name": "regula-wasi",
   "version": "3.2.2",
-  "description": "Infrastructure as Code security and compliance evaluation tool (WASI build)",
+  "description": "Infrastructure as Code security and compliance evaluation tool (WASI build). Fork of fugue/regula with security patches.",
   "type": "module",
   "main": "index.js",
   "bin": {
@@ -17,7 +17,8 @@
     "index.js",
     "cli.js",
     "regula.wasm",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "regula",
@@ -37,7 +38,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fugue/regula.git"
+    "url": "git+https://github.com/nonfx/regula.git"
   },
   "engines": {
     "node": ">=18.0.0"
