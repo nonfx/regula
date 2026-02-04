@@ -8,3 +8,10 @@ dist/
 .vscode/
 .scratch/
 .regula-history
+
+# WASM build
+regula.wasm
+
+# npm
+node_modules/
+package-lock.json

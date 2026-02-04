@@ -1,0 +1,45 @@
+{
+  "name": "regula-wasi",
+  "version": "3.2.2",
+  "description": "Infrastructure as Code security and compliance evaluation tool (WASI build)",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "regula": "cli.js"
+  },
+  "scripts": {
+    "build": "./build-wasi.sh",
+    "test": "node test/test.js",
+    "test:wasi": "node test/test-wasi.js",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "index.js",
+    "cli.js",
+    "regula.wasm",
+    "README.md"
+  ],
+  "keywords": [
+    "regula",
+    "iac",
+    "infrastructure-as-code",
+    "terraform",
+    "cloudformation",
+    "kubernetes",
+    "security",
+    "compliance",
+    "opa",
+    "rego",
+    "wasi",
+    "wasm"
+  ],
+  "author": "Fugue, Inc.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fugue/regula.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
