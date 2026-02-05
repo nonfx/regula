@@ -1,3 +1,27 @@
+/**
+ * Custom error class for Regula execution errors
+ */
+export class RegulaError extends Error {
+  /** Standard output from regula command */
+  stdout: string;
+  /** Standard error output from regula command */
+  stderr: string;
+  /** Exit code from regula process */
+  exitCode: number;
+  /** The command that was executed */
+  command: string;
+
+  constructor(
+    message: string,
+    details: {
+      stdout: string;
+      stderr: string;
+      exitCode: number;
+      command: string;
+    }
+  );
+}
+
 export interface RegulaOptions {
   /** Input type: auto, tf, tf-plan, cfn, k8s, arm */
   inputType?: "auto" | "tf" | "tf-plan" | "cfn" | "k8s" | "arm";
@@ -89,6 +113,7 @@ export function validate(
 declare const _default: {
   runRegula: typeof runRegula;
   validate: typeof validate;
+  RegulaError: typeof RegulaError;
 };
 
 export default _default;

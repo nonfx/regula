@@ -1,6 +1,6 @@
 {
   "name": "regula-wasi",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "Infrastructure as Code security and compliance evaluation tool (WASI build). Fork of fugue/regula with security patches.",
   "type": "module",
   "main": "index.js",
