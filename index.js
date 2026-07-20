@@ -85,7 +85,7 @@ export async function runRegula(paths, options = {}) {
     const cliPath = join(__dirname, "cli.js");
     const command = `node ${cliPath} ${args.join(" ")}`;
 
-    execFile("node", [cliPath, ...args], { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
+    const child = execFile("node", [cliPath, ...args], { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
       const exitCode = error?.code || 0;
 
       // If there was an execution error (not just a non-zero exit), reject with details
@@ -117,6 +117,14 @@ export async function runRegula(paths, options = {}) {
         );
       }
     });
+
+    // With no path arguments the regula CLI falls back to reading stdin. execFile
+    // always hands the child an open stdin pipe, so without an explicit EOF the
+    // WASI process blocks on read forever and this promise never settles.
+    // Note: execFile ignores the `stdio` option (it owns the pipes to build the
+    // callback's stdout/stderr), and `input` is execFileSync-only — closing the
+    // stream on the returned handle is what actually delivers EOF.
+    child.stdin.end();
   });
 }
 

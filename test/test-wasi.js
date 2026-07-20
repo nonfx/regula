@@ -33,9 +33,11 @@ function test(name, fn) {
     });
 }
 
+const runtime = process.env.WASI_RUNTIME || "node";
+
 function runWasi(args) {
   return new Promise((resolve, reject) => {
-    execFile("node", [cliPath, ...args], { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
+    execFile(runtime, [cliPath, ...args], { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
       resolve({ error, stdout, stderr, exitCode: error?.code || 0 });
     });
   });
