@@ -6,6 +6,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
+ * Custom error class for Regula execution errors
+ */
+export class RegulaError extends Error {
+  constructor(message, { stdout, stderr, exitCode, command }) {
+    super(message);
+    this.name = "RegulaError";
+    this.stdout = stdout;
+    this.stderr = stderr;
+    this.exitCode = exitCode;
+    this.command = command;
+  }
+}
+
+/**
  * Run regula on the specified path(s) and return parsed JSON results.
  * @param {string|string[]} paths - Path(s) to IaC files or directories
  * @param {Object} options - Optional configuration
@@ -17,6 +31,7 @@ const __dirname = dirname(__filename);
  * @param {boolean} options.noIgnore - Disable .gitignore filtering
  * @param {string[]} options.varFiles - Terraform variable files to use
  * @returns {Promise<Object>} - Parsed regula output with rule_results and summary
+ * @throws {RegulaError} - Throws RegulaError with stdout, stderr, exitCode, and command properties
  */
 export async function runRegula(paths, options = {}) {
   const pathArray = Array.isArray(paths) ? paths : [paths];
@@ -68,23 +83,48 @@ export async function runRegula(paths, options = {}) {
 
   return new Promise((resolve, reject) => {
     const cliPath = join(__dirname, "cli.js");
+    const command = `node ${cliPath} ${args.join(" ")}`;
 
-    execFile("node", [cliPath, ...args], { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
-      if (stderr) {
-        console.error(stderr);
+    const child = execFile("node", [cliPath, ...args], { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
+      const exitCode = error?.code || 0;
+
+      // If there was an execution error (not just a non-zero exit), reject with details
+      if (error && error.code !== 1) {
+        // Exit code 1 is expected for security violations, so we don't treat it as an error
+        reject(
+          new RegulaError(`Regula execution failed: ${error.message}`, {
+            stdout,
+            stderr,
+            exitCode,
+            command,
+          })
+        );
+        return;
       }
 
+      // Try to parse the output
       try {
         const result = JSON.parse(stdout);
         resolve(result);
       } catch (parseError) {
-        if (error) {
-          reject(new Error(`Regula failed: ${error.message}\nOutput: ${stdout}`));
-        } else {
-          reject(new Error(`Failed to parse regula output: ${stdout}`));
-        }
+        reject(
+          new RegulaError(`Failed to parse regula output: ${parseError.message}`, {
+            stdout,
+            stderr,
+            exitCode,
+            command,
+          })
+        );
       }
     });
+
+    // With no path arguments the regula CLI falls back to reading stdin. execFile
+    // always hands the child an open stdin pipe, so without an explicit EOF the
+    // WASI process blocks on read forever and this promise never settles.
+    // Note: execFile ignores the `stdio` option (it owns the pipes to build the
+    // callback's stdout/stderr), and `input` is execFileSync-only — closing the
+    // stream on the returned handle is what actually delivers EOF.
+    child.stdin.end();
   });
 }
 
@@ -94,9 +134,10 @@ export async function runRegula(paths, options = {}) {
  * @param {string|string[]} paths - Path(s) to IaC files or directories
  * @param {Object} options - Optional configuration
  * @returns {Promise<Object>} - Object with rule_results and summary
+ * @throws {RegulaError} - Throws RegulaError with stdout, stderr, exitCode, and command properties
  */
 export async function validate(paths, options = {}) {
   return runRegula(paths, options);
 }
 
-export default { runRegula, validate };
+export default { runRegula, validate, RegulaError };

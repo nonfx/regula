@@ -83,6 +83,19 @@ async function runTests() {
     assert(result.summary, "Should have summary");
   });
 
+  // Test 7: Empty paths array must settle rather than block on stdin
+  await test("Empty paths array settles instead of hanging", async () => {
+    // Guarded by an explicit timeout: if this regresses the promise never settles,
+    // and a bare await would hang the suite instead of reporting a failure.
+    const timeout = new Promise((_, rej) =>
+      setTimeout(() => rej(new Error("runRegula([]) did not settle within 30s")), 30000).unref()
+    );
+    const result = await Promise.race([runRegula([], { inputType: "tf" }), timeout]);
+    assert(result.rule_results, "Should have rule_results");
+    assert.strictEqual(result.rule_results.length, 0, "Should have no rule results for no input");
+    assert.strictEqual(result.summary.rule_results.FAIL, 0, "Should report no failures");
+  });
+
   // Summary
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed > 0 ? 1 : 0);

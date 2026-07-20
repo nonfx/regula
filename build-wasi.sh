@@ -36,7 +36,18 @@ apply_patch patches/chzyer/readline/term_wasip1.go vendor/github.com/chzyer/read
 apply_patch patches/chzyer/readline/utils_wasip1.go vendor/github.com/chzyer/readline/utils_wasip1.go
 
 echo "==> Building WASI binary..."
-GOOS=wasip1 GOARCH=wasm go build -mod vendor -ldflags="-s -w" -o regula.wasm
+
+# Mirror the Makefile's version stamping so `regula version` matches between the
+# WASI and native builds (test/test-wasi.js asserts parity). Both default to the
+# same sources; set VERSION explicitly for release builds.
+VERSION="${VERSION:-$(changie latest 2>/dev/null || true)}"
+BUILD_TYPE="${BUILD_TYPE:-dev}"
+GITCOMMIT="$(git rev-parse --short HEAD 2>/dev/null || true)"
+VERSION_PKG="github.com/fugue/regula/v3/pkg/version"
+
+GOOS=wasip1 GOARCH=wasm go build -mod vendor \
+    -ldflags="-X \"${VERSION_PKG}.Version=${VERSION}-${BUILD_TYPE}\" -X \"${VERSION_PKG}.GitCommit=${GITCOMMIT}\" -s -w" \
+    -o regula.wasm
 
 echo "==> Build complete: regula.wasm"
 ls -lh regula.wasm

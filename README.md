@@ -89,6 +89,16 @@ if (result.summary.rule_results.FAIL > 0) {
   console.error('Security violations found!');
   process.exit(1);
 }
+
+// Error handling with detailed error information
+try {
+  const result = await runRegula('./main.tf');
+} catch (error) {
+  // RegulaError includes stdout, stderr, exitCode, and command
+  console.error('Error:', error.message);
+  console.error('Stderr:', error.stderr);
+  console.error('Exit code:', error.exitCode);
+}
 ```
 
 #### API Options
@@ -102,6 +112,16 @@ if (result.summary.rule_results.FAIL > 0) {
 | `noBuiltIns` | boolean | Disable built-in rules (use only custom rules from `include`) |
 | `noIgnore` | boolean | Disable .gitignore filtering |
 | `varFiles` | string[] | Terraform variable files (.tfvars) to use |
+
+#### Error Handling
+
+When an error occurs, a `RegulaError` is thrown with the following properties:
+
+- `message` - Error description
+- `stdout` - Standard output from regula command
+- `stderr` - Standard error output (includes OPA errors and warnings)
+- `exitCode` - Exit code from regula process
+- `command` - The command that was executed
 
 ### Prebuilt Binary
 
